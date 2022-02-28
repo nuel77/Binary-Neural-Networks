@@ -55,6 +55,7 @@ def mnist(noTrSamples=1000, noTsSamples=100, digit_range=[0, 1, 2, 3, 4, 5, 6, 7
     assert noTrSamples==noTrPerClass*len(digit_range), 'noTrSamples and noTrPerClass mismatch'
     assert noTsSamples==noTsPerClass*len(digit_range), 'noTrSamples and noTrPerClass mismatch'
     data_dir = os.path.join(datasets_dir, 'data', 'mnist')
+
     fd = open(os.path.join(data_dir, 'train-images-idx3-ubyte'))
     loaded = np.fromfile(file=fd, dtype=np.uint8)
     trData = loaded[16:].reshape((60000, 28*28)).astype(float)
@@ -85,7 +86,6 @@ def mnist(noTrSamples=1000, noTsSamples=100, digit_range=[0, 1, 2, 3, 4, 5, 6, 7
         idl = np.where(trLabels == ll)
         idl = idl[0][: noTrPerClass]
         idx = list(range(count*noTrPerClass, (count+1)*noTrPerClass))
-        print(trData.shape)
         trX[idx, :] = trData[idl, :]
         trY[idx] = trLabels[idl]
         # Test data

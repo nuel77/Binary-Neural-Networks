@@ -93,7 +93,7 @@ def hard_sigmoid(x):
 def Binarize_Stochastic(W, b):
     srng = RandomStreams(lasagne.random.get_rng().randint(1, 21))
     Wb = hard_sigmoid(W / 1.)
-    print(Wb.shape)
+    #print(Wb.shape)
     Wb[Wb >= 0.5] = 1
     Wb[Wb <= 0.5] = -1
     bb = hard_sigmoid(b / 1.)
@@ -374,8 +374,6 @@ def multi_layer_forward(X, parameters):
                                  + str(l)])
         (A, cache) = layer_forward(A, parameters['Wb' + str(l)],
                                    parameters['bb' + str(l)], 'relu')
-        in_training_mode = tf.placeholder(tf.float64)
-        Ak = keras.layers.BatchNormalization()
         caches.append(cache)
 
     (AL, cache) = layer_forward(A, parameters['W' + str(L)],
@@ -592,7 +590,8 @@ def multi_layer_network(
         # ## CODE HERE
         # Forward Prop
         # # call to multi_layer_forward to get activations
-
+        if(X.shape[1]==0 and Y.shape[1]==0):
+            continue
         (AL, caches) = multi_layer_forward(A0, parameters)
 
         # # call to softmax cross entropy loss
@@ -606,7 +605,7 @@ def multi_layer_network(
 
         # Backward Prop
         # # call to softmax cross entropy loss der
-
+       
         dZ = softmax_cross_entropy_loss_der(Y, cache)
 
         # # call to multi_layer_backward to get gradients
@@ -736,7 +735,7 @@ def main():
     # getting the subset dataset from MNIST
 
     (train_data, train_label, test_data, test_label) = \
-        mnist(noTrSamples=60000, noTsSamples=10000, digit_range=[
+        mnist(noTrSamples=50000, noTsSamples=1000, digit_range=[
         0,
         1,
         2,
@@ -747,11 +746,11 @@ def main():
         7,
         8,
         9,
-        ], noTrPerClass=6000, noTsPerClass=1000)
+        ], noTrPerClass=5000, noTsPerClass=100)
 
     (train_data, validation_data, train_label, validation_label) = \
-        train_test_split(train_data.T, train_label.T, test_size=10000,
-                         train_size=50000, random_state=42)
+        train_test_split(train_data.T, train_label.T, test_size=1000,
+                         train_size=25000, random_state=42)
 
     learning_rate = 0.2
     num_iterations = 1
@@ -801,7 +800,7 @@ def main():
 
     print(('MEMORY USAGE FOR TOTAL EPOCHS----->',
            process.memory_info().rss * 0.001 / 784, 'MB'))
-
+    return
     # # CODE HERE to plot costs
     # train error vs iterations here
 
